@@ -1,6 +1,6 @@
 # Sistema de Gerenciamento de Tarefas
 
-Sistema de gerenciamento de usuários, projetos e tarefas desenvolvido para a disciplina de **Banco de Dados** (Prof. Howard Roatti - 2026/2). Persistência em **MySQL 8.0+** utilizando **Python 3** (sem ORM, conforme especificações do edital).
+Sistema de gerenciamento de usuários, projetos e tarefas desenvolvido para a disciplina de **Banco de Dados** (Prof. Howard Roatti - 2026/2). Persistência em **MySQL 8.0+** utilizando **Python 3**.
 
 ---
 
@@ -47,7 +47,7 @@ Abra o arquivo `src/conexion/db_connection.py` e certifique-se de que a senha co
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "SUA_SENHA_AQUI",    # Ajuste para a senha do seu MySQL (ex: murilo123)
+    "password": "SUA_SENHA_AQUI",    # Ajuste para a senha do seu MySQL 
     "database": "gerenciamento_tarefas",
     "charset": "utf8mb4",
     "collation": "utf8mb4_unicode_ci",
