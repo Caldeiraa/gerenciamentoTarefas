@@ -6,9 +6,7 @@ O edital exige SQL por concatenação; os parâmetros são passados via
 placeholders %s do mysql-connector para evitar SQL Injection.
 """
 
-# ═══════════════════════════════════════════════════════════════════
 #  USUÁRIOS
-# ═══════════════════════════════════════════════════════════════════
 
 def sql_inserir_usuario(nome, email, cargo):
     sql = ("INSERT INTO usuarios (nome_usuario, email_usuario, cargo_usuario) "
@@ -52,9 +50,7 @@ def sql_usuario_existe(id_usuario):
     return sql, (id_usuario,)
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  PROJETOS
-# ═══════════════════════════════════════════════════════════════════
 
 def sql_inserir_projeto(nome, descricao, data_inicio, data_fim):
     sql = ("INSERT INTO projetos (nome_projeto, descricao_projeto, "
@@ -100,9 +96,7 @@ def sql_projeto_existe(id_projeto):
     return sql, (id_projeto,)
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  TAREFAS
-# ═══════════════════════════════════════════════════════════════════
 
 def sql_inserir_tarefa(titulo, descricao, status, prioridade,
                        horas_gastas, data_criacao, data_conclusao,
@@ -153,9 +147,7 @@ def sql_tarefa_existe(id_tarefa):
     return sql, (id_tarefa,)
 
 
-# ═══════════════════════════════════════════════════════════════════
-#  CONTAGEM (splash screen)
-# ═══════════════════════════════════════════════════════════════════
+#  CONTAGEM
 
 def sql_contar_tabela(nome_tabela):
     """Retorna SQL de contagem. O nome da tabela é embutido na string

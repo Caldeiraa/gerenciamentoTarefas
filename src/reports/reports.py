@@ -5,10 +5,7 @@ RF03.2 — Tarefas com nome do projeto e responsável (JOIN)
 RF03.3 — Tarefas por projeto e por status (opcional)
 """
 
-
-# ═══════════════════════════════════════════════════════════════════
 #  SQL dos relatórios (concatenação de texto, sem ORM)
-# ═══════════════════════════════════════════════════════════════════
 
 _SQL_RELATORIO_USUARIO = (
     "SELECT u.nome_usuario, "
@@ -39,9 +36,7 @@ _SQL_TAREFAS_PROJETO_STATUS = (
 )
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  Funções de exibição
-# ═══════════════════════════════════════════════════════════════════
 
 def _linha(largura=72):
     print("-" * largura)

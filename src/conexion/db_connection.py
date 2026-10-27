@@ -7,7 +7,7 @@ import mysql.connector
 from mysql.connector import Error
 
 
-# ── Configuração de acesso ao banco ─────────────────────────────────
+# Configuração de acesso ao banco
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",

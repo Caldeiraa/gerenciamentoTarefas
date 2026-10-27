@@ -11,9 +11,7 @@ from src.reports.reports import menu_relatorios
 from src.controller import controller
 
 
-# ═══════════════════════════════════════════════════════════════════
-#  MENUS DE INSERÇÃO (RF04)
-# ═══════════════════════════════════════════════════════════════════
+#  MENUS DE INSERÇÃO 
 
 def _menu_inserir_entidade(conexao):
     """RF04 — Menu de entidades → escolha → inserção → repetir."""
@@ -98,9 +96,7 @@ def _inserir_tarefa(conexao):
             break
 
 
-# ═══════════════════════════════════════════════════════════════════
-#  MENUS DE REMOÇÃO (RF05)
-# ═══════════════════════════════════════════════════════════════════
+#  MENUS DE REMOÇÃO 
 
 def _menu_remover_entidade(conexao):
     """RF05 — Menu de entidades → listagem → seleção → confirmação → remoção."""
@@ -223,9 +219,7 @@ def _remover_tarefa(conexao):
             break
 
 
-# ═══════════════════════════════════════════════════════════════════
-#  MENUS DE ATUALIZAÇÃO (RF06)
-# ═══════════════════════════════════════════════════════════════════
+#  MENUS DE ATUALIZAÇÃO 
 
 def _menu_atualizar_entidade(conexao):
     """RF06 — Menu → listagem → seleção → novos valores → exibir atualizado."""
@@ -348,10 +342,7 @@ def _atualizar_tarefa(conexao):
         if input("\nDeseja atualizar outra tarefa? (S/N): ").strip().upper() != "S":
             break
 
-
-# ═══════════════════════════════════════════════════════════════════
-#  MENU PRINCIPAL (RF02)
-# ═══════════════════════════════════════════════════════════════════
+#  MENU PRINCIPAL 
 
 def _exibir_menu():
     print("\n" + "=" * 52)

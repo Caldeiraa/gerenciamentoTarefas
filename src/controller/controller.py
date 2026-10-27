@@ -10,11 +10,6 @@ from datetime import date
 from src.sql import queries
 from src.model.models import Usuario, Projeto, Tarefa
 
-
-# ═══════════════════════════════════════════════════════════════════
-#  Helpers internos
-# ═══════════════════════════════════════════════════════════════════
-
 _STATUS_VALIDOS = ("PENDENTE", "EM_ANDAMENTO", "CONCLUIDA")
 _PRIORIDADES_VALIDAS = ("BAIXA", "MEDIA", "ALTA")
 
@@ -42,9 +37,9 @@ def _parse_data(texto, nome_campo):
         raise ValueError(f"Data '{texto}' inválida para {nome_campo}. Use o formato AAAA-MM-DD.")
 
 
-# ═══════════════════════════════════════════════════════════════════
+
 #  USUÁRIOS
-# ═══════════════════════════════════════════════════════════════════
+
 
 def inserir_usuario(conexao, nome, email, cargo):
     """RF04 + RN01 + RN08."""
@@ -141,9 +136,7 @@ def excluir_usuario(conexao, id_usuario, excluir_filhos=False):
         cursor.close()
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  PROJETOS
-# ═══════════════════════════════════════════════════════════════════
 
 def inserir_projeto(conexao, nome, descricao, data_inicio_str, data_fim_str):
     """RF04 + RN06."""
@@ -245,9 +238,7 @@ def excluir_projeto(conexao, id_projeto, excluir_filhos=False):
         cursor.close()
 
 
-# ═══════════════════════════════════════════════════════════════════
 #  TAREFAS
-# ═══════════════════════════════════════════════════════════════════
 
 def inserir_tarefa(conexao, titulo, descricao, status, prioridade,
                    horas_gastas, data_criacao_str, data_conclusao_str,
@@ -276,7 +267,7 @@ def inserir_tarefa(conexao, titulo, descricao, status, prioridade,
 
     cursor = conexao.cursor()
     try:
-        # RN02 — verifica FK
+        #  verifica FK
         if not _registro_existe(cursor, queries.sql_projeto_existe, id_projeto):
             raise ValueError(f"RN02: Projeto ID {id_projeto} não existe.")
         if not _registro_existe(cursor, queries.sql_usuario_existe, id_usuario):
