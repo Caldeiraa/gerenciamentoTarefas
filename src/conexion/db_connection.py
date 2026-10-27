@@ -11,7 +11,7 @@ from mysql.connector import Error
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "",            # preencher com a senha do MySQL da VM
+    "password": "murilo123",            # preencher com a senha do MySQL da VM
     "database": "gerenciamento_tarefas",
     "charset": "utf8mb4",
     "collation": "utf8mb4_unicode_ci",
