@@ -129,3 +129,17 @@ gerenciamentoTarefas/
 - **RF05 — Remover Registros:** Exclusão com proteção de integridade referencial (FK) e opção em cascata.
 - **RF06 — Atualizar Registros:** Atualização de atributos com visualização imediata do resultado.
 - **RN01 a RN08:** Validações de email, horas positivas, consistência de datas e integridade referencial.
+
+## 🎥 Vídeo Demonstrativo
+
+O vídeo apresenta o funcionamento do Sistema de Gerenciamento de Tarefas, desenvolvido em Python com banco de dados MySQL para a disciplina de Banco de Dados da FAESA, semestre 2026/2, sob orientação do professor Howard Roatti.
+
+A demonstração inclui:
+- Tela inicial (Splash Screen) e menu principal;
+- Relatórios e consultas ao banco de dados;
+- Inserção de registros;
+- Atualização de registros;
+- Remoção de registros;
+- Encerramento do sistema.
+
+▶️ [Clique aqui para assistir ao vídeo demonstrativo](https://youtu.be/u7krmySS0_I)
