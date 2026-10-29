@@ -1,6 +1,6 @@
 # Sistema de Gerenciamento de Tarefas
 
-Sistema de gerenciamento de usuários, projetos e tarefas desenvolvido para a disciplina de **Banco de Dados** (Prof. Howard Roatti - 2026/2). Persistência em **MySQL 8.0+** utilizando **Python 3** (sem ORM, conforme especificações do edital).
+Sistema de gerenciamento de usuários, projetos e tarefas desenvolvido para a disciplina de **Banco de Dados** (Prof. Howard Roatti - 2026/2). Persistência em **MySQL 8.0+** utilizando **Python 3**.
 
 ---
 
@@ -47,7 +47,7 @@ Abra o arquivo `src/conexion/db_connection.py` e certifique-se de que a senha co
 DB_CONFIG = {
     "host": "localhost",
     "user": "root",
-    "password": "SUA_SENHA_AQUI",    # Ajuste para a senha do seu MySQL (ex: murilo123)
+    "password": "SUA_SENHA_AQUI",    # Ajuste para a senha do seu MySQL 
     "database": "gerenciamento_tarefas",
     "charset": "utf8mb4",
     "collation": "utf8mb4_unicode_ci",
@@ -129,3 +129,17 @@ gerenciamentoTarefas/
 - **RF05 — Remover Registros:** Exclusão com proteção de integridade referencial (FK) e opção em cascata.
 - **RF06 — Atualizar Registros:** Atualização de atributos com visualização imediata do resultado.
 - **RN01 a RN08:** Validações de email, horas positivas, consistência de datas e integridade referencial.
+
+## 🎥 Vídeo Demonstrativo
+
+O vídeo apresenta o funcionamento do Sistema de Gerenciamento de Tarefas, desenvolvido em Python com banco de dados MySQL para a disciplina de Banco de Dados da FAESA, semestre 2026/2, sob orientação do professor Howard Roatti.
+
+A demonstração inclui:
+- Tela inicial (Splash Screen) e menu principal;
+- Relatórios e consultas ao banco de dados;
+- Inserção de registros;
+- Atualização de registros;
+- Remoção de registros;
+- Encerramento do sistema.
+
+▶️ [Clique aqui para assistir ao vídeo demonstrativo](https://youtu.be/u7krmySS0_I)
