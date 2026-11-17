@@ -1,0 +1,222 @@
+Você é um assistente de desenvolvimento. Já existe uma parte deste projeto no workspace atual. ANTES de escrever qualquer código, analise a estrutura existente (pastas, classes, scripts, README, diagramas) e compare com os requisitos abaixo. Depois me diga o que já está pronto, o que está faltando e o que precisa ser ajustado, e só então implemente o que falta, reaproveitando e respeitando o que já existe. Siga rigorosamente o edital transcrito a seguir, pois o trabalho só é corrigido se seguir as orientações do edital.
+
+=====================================================
+PROJETO DE DESENVOLVIMENTO DE UMA APLICAÇÃO SIMULANDO UM SISTEMA REAL DE INTERFACE ENTRE UMA LINGUAGEM DE PROGRAMAÇÃO E O BANCO DE DADOS MONGODB
+=====================================================
+Disciplina: Banco de Dados
+Professor: Howard Roatti
+Última atualização do edital: 19/11/2023 (item atualizado: 8.b)
+
+-----------------------------------------------------
+EDITAL
+-----------------------------------------------------
+
+0 - Sobre a formação dos grupos: conforme explicado em sala de aula, a formação dos grupos será a mesma da C2, exceto se houve algum comunicado referente à Observação do item 8 - Distribuição da Pontuação do edital da C2. No caso de algum componente referenciado na C2 como não contribuiu para o desenvolvimento do trabalho, esse será remanejado para um novo grupo escolhido aleatoriamente.
+
+1 - Sobre o tema para esse trabalho: dê preferência para reutilizar o mesmo projeto da C2, assim você terá apenas que modificar os trechos do seu código que envolvem a linguagem SQL, alterando para a sintaxe do banco de dados não relacional MongoDB. Caso opte em criar um projeto novo, você ainda não poderá selecionar como tema o mesmo do projeto de exemplo.
+
+2 - A aplicação deve possuir no mínimo 2 (duas) coleções com relacionamentos.
+
+3 - Desenvolvam o diagrama relacional, especificando os atributos, chaves, obrigatoriedade e relacionamentos (perceba que o diagrama é para um banco de dados relacional, independente de estarmos tratando de um banco de dados não relacional nesse trabalho).
+
+4 - Caso decida por manter o trabalho da C2, você deverá desenvolver um script que seja capaz de (vide exemplo):
+  I. Conectar ao banco de dados relacional Oracle
+  II. Consultar cada uma das tabelas existentes referente ao projeto da C2
+  III. Conectar ao banco de dados não relacional (NoSQL) MongoDB
+  IV. Criar uma coleção com o mesmo nome de cada tabela existente no projeto da C2
+  V. Caso seu projeto da C2 possua registros pré-cadastrados, realize a criação dos documentos nas referidas coleções
+
+5 - Caso optem pelo desenvolvimento de um novo projeto, você deverá desenvolver um script que seja capaz de:
+  I. Conectar ao banco de dados não relacional (NoSQL) MongoDB
+  II. Criar coleções referentes às tabelas contidas no diagrama relacional
+
+6 - Crie um programa na linguagem de sua preferência que:
+  a) Possua um menu com as seguintes opções:
+     i. relatórios
+     ii. inserir documentos
+     iii. remover documentos
+     iv. atualizar documentos
+     v. sair
+  b) Ao iniciar, seu programa deverá exibir o nome da aplicação e os nomes dos componentes do grupo (Splash Screen)
+  c) Ao iniciar, seu programa deverá informar se as coleções possuem documentos; para isso execute uma consulta que seja capaz de contar o número de documentos
+  d) Exemplo de tela de inicialização (console):
+
+     ########################################
+     #           SISTEMA DE VENDAS          #
+     #                                      #
+     #                                      #
+     #  TOTAL DE REGISTROS EXISTENTES       #
+     #    1 - FORNECEDORES: 50              #
+     #    2 - CLIENTES:     10              #
+     #    3 - PRODUTOS:     180             #
+     #    4 - PEDIDOS:      1349            #
+     #    5 - ITENS:        5819            #
+     #                                      #
+     #                                      #
+     #  CRIADO POR: FULANO                  #
+     #              BELTRANO                #
+     #              CICLANO                 #
+     #                                      #
+     #                                      #
+     #  DISCIPLINA: BANCO DE DADOS          #
+     #              2022/2                  #
+     #  PROFESSOR: HOWARD ROATTI            #
+     ########################################
+
+  e) O menu principal deverá ser exibido constantemente, de acordo com o fluxo de execução do projeto
+  f) Ao criar submenus, durante a utilização deles, deverão ser exibidos constantemente de acordo com o fluxo de execução
+
+7 - Descrição das funcionalidades dos itens de menu:
+
+  a) RELATÓRIOS:
+     (1) deve haver ao menos duas opções de relatórios:
+         (i) consulta realizando a sumarização (agrupamento) de alguma(s) coleção, por exemplo: o valor total dos pedidos agrupados por fornecedores
+         (ii) uma consulta com junção de coleções, por exemplo: relatório de itens de pedido
+
+  b) INSERIR DOCUMENTOS:
+     (1) deverá exibir um menu com as opções das entidades existentes
+     (2) o usuário deverá selecionar uma das entidades
+     (3) exiba cada atributo da entidade selecionada e permita que o usuário informe os dados delas
+     (4) realize a inserção do documento
+     (5) pergunte ao usuário se deseja continuar inserindo; caso a resposta seja "Não", volte ao menu principal. Caso a resposta seja "Sim", volte ao menu de opções de entidades existentes ou permita que continue realizando a ação na entidade previamente selecionada
+
+  c) REMOVER DOCUMENTOS:
+     (1) deverá exibir um menu com as opções das entidades existentes
+     (2) o usuário deverá selecionar uma das entidades
+     (3) deverá listar as tuplas (documentos) da entidade (coleção) selecionada, ao menos o campo principal e um campo descritivo
+     (4) o usuário deverá selecionar o documento que deseja remover através de uma opção (campo principal ou listagem numérica fixa, por exemplo)
+     (5) confirme com o usuário se deseja realmente remover o registro; caso a resposta seja "Não", volte ao menu principal. Caso a resposta seja "Sim":
+         (i) verifique se o documento que o usuário deseja remover possui algum documento referenciado em outra coleção; caso possua: informe que aquele documento não poderá ser excluído OU pergunte se é desejo dele remover o documento da coleção filha, excluindo-os caso a resposta seja "Sim"
+     (6) pergunte ao usuário se deseja excluir mais algum documento; caso a resposta seja "Não", volte ao menu principal. Caso a resposta seja "Sim", volte ao menu de opções de entidades existentes ou permita que continue realizando a ação na entidade previamente selecionada
+
+  d) ATUALIZAR DOCUMENTOS:
+     (1) deverá exibir um menu com as opções das entidades existentes
+     (2) o usuário deverá selecionar uma das entidades
+     (3) deverá listar as tuplas (documentos) da entidade (coleção) selecionada, ao menos o campo principal e um campo descritivo
+     (4) o usuário irá selecionar a tupla que deseja atualizar através de uma opção (campo principal ou listagem numérica fixa, por exemplo)
+     (5) solicite que ele informe todos os atributos atômicos, exceto o campo principal, OU permita que ele escolha qual campo deseja alterar
+     (6) realize a atualização da tupla com os dados informados pelo usuário
+     (7) exiba o registro atualizado
+     (8) pergunte ao usuário se deseja atualizar mais algum documento; caso a resposta seja "Não", volte ao menu principal. Caso a resposta seja "Sim", volte ao menu de opções de entidades existentes ou permita que continue realizando a ação na entidade previamente selecionada
+
+8 - ENTREGÁVEIS:
+  (a) Todos os scripts deverão estar disponíveis no GitHub do grupo em um novo projeto:
+      (i) script de criação das coleções
+      (ii) código-fonte do programa desenvolvido, devidamente organizado
+      (iii) diagrama relacional (pdf, png ou jpeg)
+      (iv) vídeo demonstrativo das funcionalidades implementadas, explicando o passo a passo da aplicação
+      (v) README.MD explicando como executar o projeto no ambiente proposto (Linux)
+  (b) Deverá ser postado no AVA o link para o GitHub; além disso deverá ser descrito, na forma de relatório, o nome de cada membro do grupo e suas contribuições. Caso algum membro não tenha contribuído com nada, descreva o nome da pessoa seguido da indicação NÃO CONTRIBUIU, e o mesmo terá sua avaliação zerada.
+  (c) Somente será corrigido se seguir as orientações do edital, caso contrário é zero!
+
+9 - DISTRIBUIÇÃO DA PONTUAÇÃO:
+  - 1,5 | Relatórios: 1,0 <6.a.1.i> e 0,5 <6.a.1.ii>
+  - 1,5 | Inserir Registros: 1,0 <6.a.1.i> e 0,5 <6.a.1.ii> (conforme consta no edital)
+  - 1,5 | Remover Registros: 1,0 <6.c.[1-4 e 6]> e 0,5 <6.c.5.i>
+  - 1,5 | Atualizar Registros: 1,0 <6.d.[1-6]> e 0,5 <6.d.[7-8]>
+  - 0,5 | Diagrama Relacional, corretamente desenvolvido
+  - 0,5 | Interface Amigável (obs.: não é obrigatória a criação de telas ou páginas; mesmo no console é possível ter uma interface amigável)
+  - 0,5 | Vídeo Demonstrativo explicando o objetivo do trabalho e a utilização do sistema passo a passo em todos os menus
+  - 0,5 | Documentação explicativa de utilização do sistema no Linux
+  - TOTAL: 8,0
+
+  Observações importantes:
+  (1) todos os componentes do grupo deverão participar de sua criação; caso seja informado pelos membros ativos que houve algum componente que não participou, esse terá sua avaliação zerada automaticamente
+  (2) lembre-se que o trabalho não possui avaliação substitutiva
+  (3) atrasos serão tolerados, porém perderão 0,5 ponto a cada dia de atraso
+  (4) o banco de dados deverá ser o MongoDB
+
+10 - PROJETO DE EXEMPLO: https://github.com/howardroatti/example_crud_mongo
+  (a) façam um fork (cópia) do projeto e analisem o projeto antes de iniciar o de vocês
+  (b) não deixem para fazer em cima da hora; o projeto é extenso e vocês podem não ter tempo hábil de realizá-lo, principalmente se for realizar um novo projeto e não optar por dar continuidade ao anterior (C2)
+  (c) não serão aceitos projetos idênticos ou cópias parciais, exceto do projeto de exemplo
+
+-----------------------------------------------------
+ESQUEMA DO PROJETO NO GITHUB (estrutura de módulos)
+-----------------------------------------------------
+- model: classes referentes às entidades do modelo relacional.
+- conexion: módulo de conexão com o banco de dados.
+- controller: módulo composto de classes responsáveis por controlar a criação dos objetos e transferir/alterar os dados para o banco de dados. (depende de model e conexion)
+- utils: módulo composto de uma classe para auxiliar na criação dos menus, bem como de uma classe para controle e geração da tela de splash screen. (depende de conexion)
+- reports: módulo responsável por gerar os relatórios a partir das consultas no MongoDB. (depende de conexion)
+- principal: script principal responsável por unir e dar acesso ao restante do sistema. (usa controller, utils e reports)
+
+-----------------------------------------------------
+FAQ
+-----------------------------------------------------
+- Podemos criar interface gráfica? Sim.
+- Podemos manter o programa apenas no console sem interface gráfica? Sim, desde que tenha uma interface amigável e seja de fácil utilização.
+- Podemos utilizar uma linguagem diferente? Sim, a linguagem em que se sentirem mais confortáveis, porém o projeto deve ser capaz de ser executado em ambiente Linux.
+- Podemos usar algum componente, biblioteca ou funcionalidade que facilite a criação de consultas e alterações das coleções? NÃO. Você deverá criar as consultas e atualizações utilizando a linguagem nativa, apenas com uma biblioteca que permita a execução de comandos MongoDB (ou seja, sem ORM/ODM que abstraia as consultas).
+- Podemos realizar o trabalho sem grupos? Prioritariamente, em grupo. É possível individualmente, desde que o aluno se responsabilize por desenvolver e entregar em tempo hábil.
+- É possível trocar de grupo? Sim, até duas semanas antes da data de entrega.
+
+-----------------------------------------------------
+ROTEIRO PARA AUXÍLIO NA EXECUÇÃO DO TRABALHO
+-----------------------------------------------------
+1 - Crie o modelo pelo SQL Power Architect
+2 - Gere um PDF com o modelo proposto
+3 - Gere o script de criação das coleções
+4 - Crie os objetos relacionados às entidades do modelo proposto
+5 - Crie as classes controladoras para cada objeto do modelo proposto
+6 - Crie os relatórios solicitados no edital
+7 - Altere o splash_screen
+8 - Altere a classe principal
+
+-----------------------------------------------------
+ORIENTAÇÕES PARA DESENVOLVIMENTO DO PROJETO
+-----------------------------------------------------
+
+ETAPA 1: Modelagem e Criação de Coleções
+- Defina quais serão as entidades e seus atributos
+- Defina corretamente os nomes dos campos (nome único por tabela)
+- Defina corretamente o tipo de cada campo (inteiro, real, texto, data, etc.)
+- Defina os campos determinantes (PK e FK)
+- Crie o diagrama relacional com as tabelas, campos, tipos, chave primária, chave estrangeira e relacionamentos com as devidas cardinalidades
+- Gere o script para criação das coleções
+
+ETAPA 2: Criação das Classes Principais
+- Desenvolva as classes que representam as tabelas do tema (usar como referência os exemplos em src/model)
+- Sempre que um objeto possui associação com outro, a classe deve ter como atributo uma instância do outro objeto, não apenas seu atributo (ver exemplos: src/model/itens_pedido.py e src/model/pedidos.py)
+- Crie getters e setters para cada atributo
+- Crie um método to_string para cada classe
+
+ETAPA 3: Criação das Classes Controladoras
+- Desenvolva as classes que realizam a interface entre os objetos da Etapa 2 e as tabelas/coleções da Etapa 1
+- Crie um método de verificação de existência ou não do registro com o qual está trabalhando. Sendo novo (inserção), ele não deve existir, para manter a integridade de entidade. Sendo existente (atualização ou exclusão), ele deve existir para que o procedimento seja realizado
+- Em cada interface, realize a conexão antes de executar os comandos MongoDB
+- Realize a concatenação dos atributos quando necessário
+- Veja os exemplos existentes em src/controller
+- Teste cada detalhe criado para saber se está funcionando corretamente
+
+ETAPA 4: Criação dos Relatórios
+- Defina os relatórios que atendam ao edital. Obrigatoriamente deverão ter dois: um com funções agregadas e cláusula group by (sumarização) e outro com joins (junção de coleções)
+- Caso seja necessário exibir informações das coleções em formato de listagem, como nos exemplos da controladora de Itens de Pedidos e da controladora de Pedidos, crie as consultas no formato de relatório
+- Altere a classe src/reports/relatorios.py para exibir os relatórios criados e executar as consultas de cada um
+
+ETAPA 5: Splash Screen e Menus
+- Altere e/ou inclua em src/utils/config.py os menus de relatórios, entidades e outros desejados
+- Altere os atributos da classe src/utils/splash_screen.py para exibir o nome do sistema proposto, a quantidade de registros em cada coleção, os nomes dos componentes do grupo, preservando o nome do professor, disciplina e semestre
+
+ETAPA 6: Principal
+- Altere as interfaces existentes (métodos inserir, atualizar, excluir e reports) para atender ao sistema proposto
+- No sistema proposto não há necessidade de ter mais do que duas entidades/tabelas
+- Verifique se todos os imports estão adequados ao que foi criado
+- Altere os fluxos de menus para atender ao edital; no exemplo existem partes que não foram implementadas e que podem afetar o resultado do trabalho
+
+ETAPA FINAL:
+- Estude o projeto de exemplo e tire todas as dúvidas durante o desenvolvimento
+- Respeite a Orientação a Objetos e utilize-a corretamente
+- Respeite a criação e utilização dos comandos MongoDB; use adequadamente
+- Realize diversos testes (cada componente do grupo e pessoas de fora do grupo)
+- Estabeleça metas semanais
+- Lembre-se de gravar o vídeo demonstrando a utilização do sistema
+- Mantenha o GitHub atualizado até o dia da entrega
+
+=====================================================
+O QUE EU QUERO QUE VOCÊ FAÇA AGORA
+=====================================================
+1. Analise o que já existe no projeto e liste: o que já atende ao edital, o que está incompleto e o que falta (modelo, classes model, controllers, reports, utils/splash screen, menus, principal, script de criação das coleções, diagrama relacional, README para Linux).
+2. Proponha um plano curto de ajustes, priorizando os itens que mais valem pontos (relatórios, inserir, remover com checagem de documentos referenciados, atualizar, interface amigável).
+3. Implemente o que falta seguindo a estrutura de módulos descrita (model, conexion, controller, utils, reports, principal), usando apenas biblioteca de driver para MongoDB (sem ODM/ORM), com no mínimo 2 coleções relacionadas, 2 relatórios (um com agrupamento/agregação e um com junção de coleções), splash screen com contagem de documentos por coleção, e menu principal sempre exibido.
+4. Garanta que tudo rode em Linux e atualize o README.md com o passo a passo de execução.

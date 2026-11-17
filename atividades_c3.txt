@@ -1,0 +1,73 @@
+=====================================================
+DIVISAO DE ATIVIDADES - ENTREGA C3 (MONGODB)
+SISTEMA DE GERENCIAMENTO DE TAREFAS
+=====================================================
+
+OBJETIVO PRINCIPAL:
+Migrar o sistema da C2 (MySQL) para MongoDB (NoSQL) usando
+o driver nativo PyMongo (sem ORM/ODM), mantendo o fluxo
+em console e adicionando as exigencias do edital da C3.
+
+-----------------------------------------------------
+1. MURILO (Parte Mais Dificil: NoSQL, Agregacoes e Integridade)
+-----------------------------------------------------
+- Conexao com MongoDB:
+  Configurar src/conexion/db_connection.py com PyMongo (MongoClient).
+- Script de Criacao/Migracao de Colecoes:
+  Criar script (ex: script_criacao_mongo.py) para gerar as colecoes
+  (usuarios, projetos, tarefas) e inserir os dados pre-cadastrados.
+- Integridade Referencial em Codigo (Edital item 7.c.5.i):
+  Como o MongoDB nao possui restricoes de FK nativas, criar no controller:
+  * Ao tentar remover Usuario: verificar se possui tarefas associadas.
+  * Ao tentar remover Projeto: verificar se possui tarefas associadas.
+  * Se houver dependencias: bloquear OU perguntar se deseja excluir em cascata.
+- Relatorios Avancados com Aggregation Pipeline (Edital item 7.a - 1.5 pts):
+  * Relatorio 1 (Sumarizacao/Agrupamento): $group calculando total de tarefas
+    e soma de horas gastas por usuario.
+  * Relatorio 2 (Juncao): $lookup unindo tarefas com projetos e usuarios
+    (substituindo o INNER JOIN do SQL).
+
+-----------------------------------------------------
+2. DAVI (CRUD e Controladores no MongoDB)
+-----------------------------------------------------
+- Ajuste das Classes Model (src/model/models.py):
+  Adicionar getters, setters e metodo to_string() para Usuario, Projeto e Tarefa.
+- Operacoes de Insercao (Edital item 7.b - 1.5 pts):
+  Migrar inserir_usuario, inserir_projeto e inserir_tarefa para collection.insert_one(),
+  mantendo validacoes (email, datas, status e prioridades validas).
+- Operacoes de Atualizacao (Edital item 7.d - 1.5 pts):
+  Implementar busca previa por ID, permitir alteracao dos campos atomicos
+  (sem alterar o ID) usando collection.update_one(), e exibir o registro atualizado.
+- Listagens de Suporte:
+  Migrar listar_usuarios, listar_projetos e listar_tarefas para collection.find()
+  formatando para que o usuario selecione o documento a editar ou excluir.
+
+-----------------------------------------------------
+3. GEORGE (Interface, Menus, Documentacao e Entregaveis)
+-----------------------------------------------------
+- Splash Screen (src/utils/splash_screen.py):
+  Atualizar a contagem dinamica de documentos via collection.count_documents({})
+  para usuarios, projetos e tarefas, mantendo os dados da disciplina/grupo.
+- Fluxo de Menus (src/principal.py):
+  Garantir confirmacoes continuas ("Deseja continuar inserindo/atualizando/removendo?"),
+  listagem de campos principais antes de remover/atualizar e navegacao amigavel.
+- Documentacao (README.md - 0.5 pt):
+  Atualizar com passo a passo para instalacao do MongoDB e execucao no Linux Ubuntu/Debian.
+- Entregaveis Finais (1.0 pt somados):
+  * Diagrama relacional: conferir conformidade da imagem/PDF gerada.
+  * Video demonstrativo: roteirizar e gravar demonstrando todas as funcoes do sistema.
+  * Texto para o AVA: redigir o resumo com link do GitHub e contribuicoes individuais.
+
+-----------------------------------------------------
+RESUMO DA PONTUACAO (TOTAL: 8.0 PONTOS)
+-----------------------------------------------------
+- 1,5 pts | Relatorios ($group e $lookup) -> Murilo
+- 1,5 pts | Inserir Registros            -> Davi
+- 1,5 pts | Remover com Integridade      -> Murilo & Davi
+- 1,5 pts | Atualizar Registros          -> Davi
+- 0,5 pt  | Diagrama Relacional          -> George
+- 0,5 pt  | Interface Amigavel           -> George
+- 0,5 pt  | Video Demonstrativo          -> George & Grupo
+- 0,5 pt  | Documentacao Linux (README)  -> George
+=====================================================
+
