@@ -1,38 +1,45 @@
-"""Módulo de conexão com o banco de dados MySQL (DB-API 2.0).
 
-Configurar as credenciais abaixo conforme o ambiente da VM Linux da disciplina.
-"""
+"""Módulo de conexão com o banco de dados MySQL."""
 
+import os
 import mysql.connector
 from mysql.connector import Error
 
 
-# Configuração de acesso ao banco
+# Configurações obtidas das variáveis de ambiente.
 DB_CONFIG = {
-    "host": "localhost",
-    "user": "root",
-    "password": "",            # preencher com a senha do MySQL da VM
-    "database": "gerenciamento_tarefas",
+    "host": os.getenv("DB_HOST", "localhost"),
+    "user": os.getenv("DB_USER", "root"),
+    "password": os.getenv("DB_PASSWORD"),
+    "database": os.getenv("DB_NAME", "gerenciamento_tarefas"),
     "charset": "utf8mb4",
     "collation": "utf8mb4_unicode_ci",
 }
 
 
 def conectar():
-    """Abre e retorna uma conexão com o banco gerenciamento_tarefas.
+    """Abre e retorna uma conexão com o banco de dados."""
 
-    Retorna None e imprime o erro caso a conexão falhe.
-    """
+    if not DB_CONFIG["password"]:
+        print(
+            "\n[ERRO] A variável de ambiente DB_PASSWORD não foi configurada."
+        )
+        return None
+
     try:
         conexao = mysql.connector.connect(**DB_CONFIG)
+
         if conexao.is_connected():
             return conexao
+
     except Error as e:
         print(f"\n[ERRO] Não foi possível conectar ao banco de dados: {e}")
+
     return None
 
 
 def desconectar(conexao):
     """Fecha a conexão, se estiver ativa."""
+
     if conexao and conexao.is_connected():
         conexao.close()
