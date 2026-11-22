@@ -4,7 +4,7 @@ Responsável pelo fluxo do programa: splash screen → menu principal → açõe
 Estrutura conforme RNF04: model, controller, conexion, sql, reports, utils, principal.
 """
 
-from src.conexion.db_connection import conectar, desconectar
+from src.conexion.mongo_connection import conectar_mongo, desconectar_mongo
 from src.utils.config import OPCOES_MENU
 from src.utils.splash_screen import exibir_splash_screen
 from src.reports.reports import menu_relatorios
@@ -353,21 +353,25 @@ def _exibir_menu():
     print("=" * 52)
 
 
+
 def main():
-    """Fluxo completo: conexão → splash → menu → ações → desconexão."""
-    conexao = conectar()
-    if conexao is None:
-        print("\n[ERRO] Não foi possível iniciar o sistema sem conexão com o banco.")
-        print("Verifique as configurações em src/conexion/db_connection.py")
+    """Fluxo completo: MongoDB → splash → menu → ações → desconexão."""
+
+    cliente, banco = conectar_mongo()
+
+    if cliente is None or banco is None:
+        print("\n[ERRO] Não foi possível iniciar o sistema sem conexão com MongoDB.")
+        print("Verifique as configurações em src/conexion/mongo_connection.py")
         return
 
     try:
         # RF01 — Splash screen
-        exibir_splash_screen(conexao)
+        exibir_splash_screen(banco)
 
         # RF02 — Menu principal exibido continuamente
         while True:
             _exibir_menu()
+
             try:
                 opcao = input("Escolha uma opção (1-5): ").strip()
             except (EOFError, KeyboardInterrupt):
@@ -375,20 +379,21 @@ def main():
                 break
 
             if opcao == "1":
-                menu_relatorios(conexao)
+                menu_relatorios(banco)
             elif opcao == "2":
-                _menu_inserir_entidade(conexao)
+                _menu_inserir_entidade(banco)
             elif opcao == "3":
-                _menu_remover_entidade(conexao)
+                _menu_remover_entidade(banco)
             elif opcao == "4":
-                _menu_atualizar_entidade(conexao)
+                _menu_atualizar_entidade(banco)
             elif opcao == "5":
                 print("\nEncerrando o sistema. Até logo!")
                 break
             else:
                 print("\nOpção inválida. Digite um número de 1 a 5.")
+
     finally:
-        desconectar(conexao)
+        desconectar_mongo(cliente)
 
 
 if __name__ == "__main__":
