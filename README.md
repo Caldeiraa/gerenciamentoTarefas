@@ -1,145 +1,197 @@
 # Sistema de Gerenciamento de Tarefas
 
-Sistema de gerenciamento de usuários, projetos e tarefas desenvolvido para a disciplina de **Banco de Dados** (Prof. Howard Roatti - 2026/2). Persistência em **MySQL 8.0+** utilizando **Python 3**.
+## 1. Apresentação
 
----
+O Sistema de Gerenciamento de Tarefas é uma aplicação desenvolvida em Python para cadastrar e gerenciar usuários, projetos e tarefas. O projeto foi desenvolvido para a disciplina de Banco de Dados, sob orientação do professor Howard Roatti, no semestre 2026/2.
 
-## 👥 Integrantes do Grupo
+Nesta versão, a persistência dos dados é realizada por meio do MongoDB, utilizando a biblioteca PyMongo.
+
+## 2. Integrantes e responsabilidades
 
 | Integrante | Responsabilidade |
 |---|---|
-| **Murilo** | Banco de dados e modelagem (SQL, integridade, relatórios) |
-| **Davi** | Operações CRUD (regras de negócio e controladores) |
-| **George** | Interface e integração (menus, fluxo, splash screen, documentação) |
+| Murilo Caldeira Sousa | Banco de dados e modelagem |
+| Davi Mendes Barcelos | Operações CRUD, regras de negócio e controladores |
+| George Pinheiro Ramos | Interface, integração, menus, fluxo de execução, tela inicial e documentação |
 
----
+## 3. Tecnologias utilizadas
 
-## 🛠️ Pré-requisitos
+- Python 3.10 ou superior.
+- MongoDB Community Server.
+- PyMongo.
+- Git e GitHub para controle de versão.
 
-- **Python 3.10+**
-- **MySQL Server 8.0+** (ou MySQL Workbench)
-- Biblioteca Python: `mysql-connector-python`
+## 4. Pré-requisitos
 
----
+Antes de executar o sistema, é necessário instalar:
 
-## 🚀 1. Preparação do Banco de Dados (MySQL)
+1. Python 3.10 ou superior.
+2. MongoDB Community Server.
+3. Biblioteca PyMongo.
 
-Tanto na **Máquina Virtual (Linux)** quanto na **Máquina Física (Windows)**, é necessário criar o banco e as tabelas executando o script SQL:
+A instalação do MongoDB pode ser realizada pelos links oficiais:
 
-1. Abra o **MySQL Workbench** (ou terminal do MySQL).
-2. Abra e execute o arquivo:
-   ```sql
-   script_criacao.sql
-   ```
-   *Ou via terminal:*
-   ```bash
-   mysql -u root -p < script_criacao.sql
-   ```
-3. Isso criará o banco de dados `gerenciamento_tarefas`, todas as tabelas (`usuarios`, `projetos`, `tarefas`), restrições e registros de teste.
+- Windows: https://www.mongodb.com/try/download/community
+- Ubuntu: https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/
+- Debian: https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-debian/
 
----
+Para visualizar e administrar os dados, também é possível utilizar o MongoDB Compass:
 
-## ⚙️ 2. Configurar Credenciais do Banco
+https://www.mongodb.com/products/tools/compass
 
-Abra o arquivo `src/conexion/db_connection.py` e certifique-se de que a senha corresponde ao seu MySQL:
+## 5. Obtenção do projeto
 
-```python
-DB_CONFIG = {
-    "host": "localhost",
-    "user": "root",
-    "password": "SUA_SENHA_AQUI",    # Ajuste para a senha do seu MySQL 
-    "database": "gerenciamento_tarefas",
-    "charset": "utf8mb4",
-    "collation": "utf8mb4_unicode_ci",
-}
+Clone o repositório:
+
+```bash
+git clone https://github.com/Caldeiraa/gerenciamentoTarefas.git
 ```
 
----
+Acesse a pasta do projeto:
 
-## 🖥️ 3. Como Executar na Máquina Física (Windows)
+```bash
+cd gerenciamentoTarefas
+```
 
-1. **Instalar a biblioteca do conector MySQL:**
-   ```powershell
-   pip install mysql-connector-python
-   ```
+## 6. Configuração do ambiente
 
-2. **Entrar na pasta raiz do projeto:**
-   ```powershell
-   cd c:\caminho\para\gerenciamentoTarefas
-   ```
+Recomenda-se utilizar um ambiente virtual Python.
 
-3. **Executar o sistema:**
-   ```powershell
-   python -m src.principal
-   ```
+**Windows:**
 
----
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
+```
 
-## 🐧 4. Como Executar na Máquina Virtual (Linux)
+**Ubuntu/Debian:**
 
-1. **Instalar as dependências necessárias:**
-   ```bash
-   sudo apt update
-   sudo apt install -y python3 python3-pip
-   pip3 install mysql-connector-python
-   ```
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-2. **Entrar na pasta raiz do projeto:**
-   ```bash
-   cd ~/gerenciamentoTarefas
-   ```
+Com o ambiente virtual ativado, instale a biblioteca PyMongo:
 
-3. **Executar o sistema:**
-   ```bash
-   python3 -m src.principal
-   ```
+```bash
+python -m pip install pymongo
+```
 
----
+## 7. Configuração do banco de dados
 
-## 📁 Estrutura do Projeto
+A aplicação utiliza o MongoDB com as seguintes configurações padrão:
+
+| Parâmetro | Valor |
+|---|---|
+| Endereço de conexão | mongodb://localhost:27017/ |
+| Banco de dados | gerenciamento_tarefas |
+| Coleções | usuarios, projetos e tarefas |
+
+A configuração da conexão está implementada no arquivo `src/conexion/mongo_connection.py`.
+
+O sistema permite definir o endereço de conexão e o nome do banco por meio das variáveis de ambiente `MONGO_URI` e `MONGO_DB_NAME`.
+
+Quando essas variáveis não são configuradas, são utilizados os valores padrão apresentados na tabela.
+
+O banco de dados e as coleções são criados pelo MongoDB conforme a aplicação realiza as primeiras gravações. Portanto, não é necessário executar um script SQL para criar as tabelas.
+
+## 8. Execução do sistema
+
+Antes de executar a aplicação, certifique-se de que o serviço MongoDB esteja iniciado.
+
+Na pasta principal do projeto, com o ambiente virtual ativado, execute:
+
+**Windows:**
+
+```powershell
+python -m src.principal
+```
+
+**Ubuntu/Debian:**
+
+```bash
+python3 -m src.principal
+```
+
+Após a execução, será apresentada a tela inicial do sistema e, em seguida, o menu principal.
+
+## 9. Criação das coleções
+
+O projeto disponibiliza o script `script_criacao_mongo.py`, localizado na pasta principal, para criar as coleções necessárias no MongoDB.
+
+Para executar o script, utilize:
+
+```bash
+python script_criacao_mongo.py
+```
+
+O script verifica a existência das coleções `usuarios`, `projetos` e `tarefas`, criando apenas aquelas que ainda não existem. Os registros já armazenados são preservados.
+
+## 10. Funcionalidades
+
+O sistema disponibiliza as seguintes funcionalidades:
+
+- **Tela inicial:** apresenta informações do projeto e a quantidade de registros armazenados.
+- **Menu principal:** permite acessar as operações disponíveis.
+- **Inserção:** cadastro de usuários, projetos e tarefas.
+- **Consulta e relatórios:** apresentação de informações armazenadas no banco de dados, utilizando operações de agregação do MongoDB.
+- **Atualização:** alteração dos dados cadastrados.
+- **Remoção:** exclusão de registros, considerando os relacionamentos entre usuários, projetos e tarefas.
+- **Validações:** aplicação de regras de negócio relacionadas aos dados cadastrados.
+
+## 11. Estrutura do projeto
 
 ```text
 gerenciamentoTarefas/
-├── script_criacao.sql       # Script DDL + dados iniciais
-├── modelo_relacional.md     # Diagrama ER e cardinalidades
-├── requisitos.md            # Especificações de requisitos e regras
-├── PROMPTS.md               # Histórico de uso de IA (conforme edital)
-├── README.md                # Instruções de execução
-└── src/
-    ├── conexion/            # Conexão com o banco (db_connection.py)
-    ├── controller/          # Regras de negócio e validações (controller.py)
-    ├── model/               # Entidades Usuario, Projeto, Tarefa (models.py)
-    ├── reports/             # Relatórios GROUP BY e JOIN (reports.py)
-    ├── sql/                 # Consultas SQL por concatenação (queries.py)
-    ├── utils/               # Configurações e Splash Screen (RF01)
-    └── principal.py         # Ponto de entrada do sistema (RF02)
+│
+├── src/
+│   ├── conexion/
+│   │   ├── mongo_connection.py
+│   │   └── db_connection.py
+│   │
+│   ├── controller/
+│   │   └── controller.py
+│   │
+│   ├── model/
+│   │   └── models.py
+│   │
+│   ├── reports/
+│   │   └── reports.py
+│   │
+│   ├── utils/
+│   │   ├── config.py
+│   │   └── splash_screen.py
+│   │
+│   └── principal.py
+│
+├── modelo_relacional.md
+├── modeloRelacional.png
+├── PROMPTS.md
+└── README.md
 ```
 
----
+## 12. Modelagem de dados
 
-## 📋 Funcionalidades Implementadas
+O projeto contempla três entidades principais: usuários, projetos e tarefas.
 
-- **RF01 — Splash Screen:** Exibe contagem dinâmica de registros, integrantes, disciplina e professor.
-- **RF02 — Menu Principal:** Navegação contínua entre as funcionalidades.
-- **RF03 — Relatórios:**
-  - *RF03.1 (GROUP BY):* Resumo de tarefas e horas gastas por usuário.
-  - *RF03.2 (JOIN):* Detalhamento de tarefas com projeto e usuário responsável.
-  - *RF03.3:* Tarefas agrupadas por projeto e status.
-- **RF04 — Inserir Registros:** Usuários, projetos e tarefas com validações completas.
-- **RF05 — Remover Registros:** Exclusão com proteção de integridade referencial (FK) e opção em cascata.
-- **RF06 — Atualizar Registros:** Atualização de atributos com visualização imediata do resultado.
-- **RN01 a RN08:** Validações de email, horas positivas, consistência de datas e integridade referencial.
+Os relacionamentos estabelecidos são:
 
-## 🎥 Vídeo Demonstrativo
+- Um usuário pode ser responsável por várias tarefas.
+- Um projeto pode possuir várias tarefas.
+- Cada tarefa está associada a um usuário responsável e a um projeto.
 
-O vídeo apresenta o funcionamento do Sistema de Gerenciamento de Tarefas, desenvolvido em Python com banco de dados MySQL para a disciplina de Banco de Dados da FAESA, semestre 2026/2, sob orientação do professor Howard Roatti.
+O arquivo `modelo_relacional.md` apresenta a modelagem e os relacionamentos entre as entidades.
 
-A demonstração inclui:
-- Tela inicial (Splash Screen) e menu principal;
-- Relatórios e consultas ao banco de dados;
-- Inserção de registros;
-- Atualização de registros;
-- Remoção de registros;
-- Encerramento do sistema.
+## 13. Vídeo demonstrativo
 
-▶️ [Clique aqui para assistir ao vídeo demonstrativo](https://youtu.be/u7krmySS0_I)
+O vídeo demonstrativo do projeto está disponível no YouTube:
+
+https://youtu.be/u7krmySS0_I
+
+**Observação:** a demonstração em vídeo deverá corresponder à versão atual do sistema, que utiliza MongoDB.
+
+## 14. Repositório
+
+O código-fonte e o histórico de desenvolvimento estão disponíveis no GitHub:
+
+https://github.com/Caldeiraa/gerenciamentoTarefas
