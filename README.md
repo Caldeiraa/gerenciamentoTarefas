@@ -39,20 +39,40 @@ Tanto na **Máquina Virtual (Linux)** quanto na **Máquina Física (Windows)**, 
 
 ---
 
+
 ## ⚙️ 2. Configurar Credenciais do Banco
 
-Abra o arquivo `src/conexion/db_connection.py` e certifique-se de que a senha corresponde ao seu MySQL:
+As credenciais do MySQL são obtidas por variáveis de ambiente. Não coloque senhas diretamente nos arquivos do projeto.
 
-```python
-DB_CONFIG = {
-    "host": "localhost",
-    "user": "root",
-    "password": "SUA_SENHA_AQUI",    # Ajuste para a senha do seu MySQL 
-    "database": "gerenciamento_tarefas",
-    "charset": "utf8mb4",
-    "collation": "utf8mb4_unicode_ci",
-}
+### Windows (PowerShell)
+
+Antes de executar o sistema, configure a senha no terminal:
+
+```powershell
+$env:DB_PASSWORD="SUA_SENHA_DO_MYSQL"
 ```
+
+Opcionalmente, configure também o usuário, o host e o banco:
+
+```powershell
+$env:DB_HOST="localhost"
+$env:DB_USER="root"
+$env:DB_NAME="gerenciamento_tarefas"
+```
+
+### Linux
+
+No terminal, configure:
+
+```bash
+export DB_PASSWORD="SUA_SENHA_DO_MYSQL"
+export DB_HOST="localhost"
+export DB_USER="root"
+export DB_NAME="gerenciamento_tarefas"
+```
+
+As variáveis configuradas dessa maneira ficam disponíveis na sessão atual do terminal. Se abrir outro terminal, será necessário configurá-las novamente.
+
 
 ---
 
