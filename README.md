@@ -195,3 +195,35 @@ https://youtu.be/u7krmySS0_I
 O código-fonte e o histórico de desenvolvimento estão disponíveis no GitHub:
 
 https://github.com/Caldeiraa/gerenciamentoTarefas
+
+## 15. Testes e validação dos relatórios
+
+Em 22/11/2026, foram realizados testes funcionais dos três relatórios do sistema Gerenciador de Tarefas, utilizando o banco de dados MongoDB.
+
+### RF03.1 — Resumo por usuário (AGGREGATE)
+- Usuário testado: Jack.
+- Total de tarefas: 1.
+- Tarefas concluídas: 0.
+- Total de horas: 2,00.
+- **Resultado:** aprovado.
+
+### RF03.2 — Tarefas detalhadas (LOOKUP)
+- Tarefa: Teste dos relatórios C3.
+- Projeto: Projeto Demonstração C3.
+- Responsável: Jack.
+- Status: PENDENTE.
+- Prioridade: MEDIA.
+- Horas: 2,00.
+- **Resultado:** aprovado.
+
+### RF03.3 — Tarefas por projeto e status (AGGREGATE)
+- Projeto: Projeto Demonstração C3.
+- Status: PENDENTE.
+- Quantidade de tarefas: 1.
+- **Resultado:** aprovado.
+
+### Conclusão dos testes
+
+Os três relatórios apresentaram os resultados esperados durante os testes realizados. Foram verificadas as consultas, agregações e associações entre as coleções `usuarios`, `projetos` e `tarefas` do MongoDB.
+
+Não foi necessária alteração no módulo `src/reports/reports.py`, pois as funcionalidades testadas apresentaram o comportamento esperado.
