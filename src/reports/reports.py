@@ -1,135 +1,234 @@
+
 """Módulo de relatórios (RF03).
 
-RF03.1 — Resumo por usuário (GROUP BY)
-RF03.2 — Tarefas com nome do projeto e responsável (JOIN)
-RF03.3 — Tarefas por projeto e por status (opcional)
+RF03.1 — Resumo por usuário (AGGREGATE)
+RF03.2 — Tarefas com nome do projeto e responsável (LOOKUP)
+RF03.3 — Tarefas por projeto e por status (AGGREGATE)
 """
 
-#  SQL dos relatórios (concatenação de texto, sem ORM)
-
-_SQL_RELATORIO_USUARIO = (
-    "SELECT u.nome_usuario, "
-    "COUNT(t.id_tarefa) AS total_tarefas, "
-    "SUM(CASE WHEN t.status_tarefa = 'CONCLUIDA' THEN 1 ELSE 0 END) AS concluidas, "
-    "COALESCE(SUM(t.horas_gastas_tarefa), 0) AS horas_totais "
-    "FROM usuarios u "
-    "LEFT JOIN tarefas t ON t.id_usuario = u.id_usuario "
-    "GROUP BY u.id_usuario, u.nome_usuario "
-    "ORDER BY horas_totais DESC"
-)
-
-_SQL_TAREFAS_DETALHADAS = (
-    "SELECT t.id_tarefa, t.titulo_tarefa, p.nome_projeto, u.nome_usuario, "
-    "t.status_tarefa, t.prioridade_tarefa, t.horas_gastas_tarefa "
-    "FROM tarefas t "
-    "INNER JOIN projetos p ON p.id_projeto = t.id_projeto "
-    "INNER JOIN usuarios u ON u.id_usuario = t.id_usuario "
-    "ORDER BY p.nome_projeto, t.id_tarefa"
-)
-
-_SQL_TAREFAS_PROJETO_STATUS = (
-    "SELECT p.nome_projeto, t.status_tarefa, COUNT(t.id_tarefa) AS qtd "
-    "FROM tarefas t "
-    "INNER JOIN projetos p ON p.id_projeto = t.id_projeto "
-    "GROUP BY p.nome_projeto, t.status_tarefa "
-    "ORDER BY p.nome_projeto, t.status_tarefa"
-)
-
-
-#  Funções de exibição
 
 def _linha(largura=72):
     print("-" * largura)
 
 
-def relatorio_resumo_usuario(conexao):
-    """RF03.1 — GROUP BY: total de tarefas, concluídas e horas por usuário."""
+def relatorio_resumo_usuario(banco):
+    """RF03.1 — Total de tarefas, concluídas e horas por usuário."""
+
     print("\n" + "=" * 72)
-    print("RELATÓRIO 1 — Resumo por Usuário (GROUP BY)")
+    print("RELATÓRIO 1 — Resumo por Usuário (AGGREGATE)")
     print("=" * 72)
-    cursor = conexao.cursor()
-    try:
-        cursor.execute(_SQL_RELATORIO_USUARIO)
-        rows = cursor.fetchall()
-        if not rows:
-            print("  Nenhum registro encontrado.")
-            return
-        print(f"  {'USUÁRIO':<20} {'TOTAL':>8} {'CONCLUÍDAS':>12} {'HORAS':>10}")
-        _linha()
-        for row in rows:
-            nome, total, concluidas, horas = row
-            print(f"  {nome:<20} {total:>8} {concluidas:>12} {horas:>10.2f}")
-        _linha()
-    finally:
-        cursor.close()
+
+    pipeline = [
+        {
+            "$lookup": {
+                "from": "tarefas",
+                "localField": "_id",
+                "foreignField": "id_usuario",
+                "as": "tarefas"
+            }
+        },
+        {"$unwind": {"path": "$tarefas", "preserveNullAndEmptyArrays": True}},
+        {
+            "$group": {
+                "_id": "$_id",
+                "nome_usuario": {"$first": "$nome_usuario"},
+                "total_tarefas": {
+                    "$sum": {
+                        "$cond": [{"$ne": ["$tarefas._id", None]}, 1, 0]
+                    }
+                },
+                "concluidas": {
+                    "$sum": {
+                        "$cond": [
+                            {"$eq": ["$tarefas.status_tarefa", "CONCLUIDA"]},
+                            1,
+                            0
+                        ]
+                    }
+                },
+                "horas_totais": {
+                    "$sum": {"$ifNull": ["$tarefas.horas_gastas_tarefa", 0]}
+                }
+            }
+        },
+        {"$sort": {"horas_totais": -1}}
+    ]
+
+    rows = list(banco["usuarios"].aggregate(pipeline))
+
+    if not rows:
+        print("  Nenhum registro encontrado.")
+        return
+
+    print(f"  {'USUÁRIO':<20} {'TOTAL':>8} {'CONCLUÍDAS':>12} {'HORAS':>10}")
+    _linha()
+
+    for row in rows:
+        nome = row.get("nome_usuario", "")
+        total = row.get("total_tarefas", 0)
+        concluidas = row.get("concluidas", 0)
+        horas = row.get("horas_totais", 0)
+
+        print(f"  {nome:<20} {total:>8} {concluidas:>12} {horas:>10.2f}")
+
+    _linha()
 
 
-def relatorio_tarefas_detalhadas(conexao):
-    """RF03.2 — JOIN: tarefas com nome do projeto e responsável."""
+def relatorio_tarefas_detalhadas(banco):
+    """RF03.2 — Tarefas com nome do projeto e responsável."""
+
     print("\n" + "=" * 72)
-    print("RELATÓRIO 2 — Tarefas Detalhadas (JOIN)")
+    print("RELATÓRIO 2 — Tarefas Detalhadas (LOOKUP)")
     print("=" * 72)
-    cursor = conexao.cursor()
-    try:
-        cursor.execute(_SQL_TAREFAS_DETALHADAS)
-        rows = cursor.fetchall()
-        if not rows:
-            print("  Nenhuma tarefa encontrada.")
-            return
-        print(f"  {'ID':>4} {'TÍTULO':<22} {'PROJETO':<20} {'RESPONSÁVEL':<15} {'STATUS':<14} {'PRIOR.':<8} {'HORAS':>6}")
-        _linha()
-        for row in rows:
-            id_t, titulo, projeto, usuario, status, prior, horas = row
-            print(f"  {id_t:>4} {titulo:<22} {projeto:<20} {usuario:<15} {status:<14} {prior:<8} {horas:>6.2f}")
-        _linha()
-    finally:
-        cursor.close()
+
+    pipeline = [
+        {
+            "$lookup": {
+                "from": "projetos",
+                "localField": "id_projeto",
+                "foreignField": "_id",
+                "as": "projeto"
+            }
+        },
+        {
+            "$lookup": {
+                "from": "usuarios",
+                "localField": "id_usuario",
+                "foreignField": "_id",
+                "as": "usuario"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$projeto",
+                "preserveNullAndEmptyArrays": True
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$usuario",
+                "preserveNullAndEmptyArrays": True
+            }
+        },
+        {"$sort": {"_id": 1}}
+    ]
+
+    rows = list(banco["tarefas"].aggregate(pipeline))
+
+    if not rows:
+        print("  Nenhuma tarefa encontrada.")
+        return
+
+    print(
+        f"  {'ID':>4} {'TÍTULO':<22} {'PROJETO':<20} "
+        f"{'RESPONSÁVEL':<15} {'STATUS':<14} {'PRIOR.':<8} {'HORAS':>6}"
+    )
+    _linha()
+
+    for row in rows:
+        id_t = row.get("_id", 0)
+        titulo = row.get("titulo_tarefa", "")
+        projeto = row.get("projeto", {}).get("nome_projeto", "Não informado")
+        usuario = row.get("usuario", {}).get("nome_usuario", "Não informado")
+        status = row.get("status_tarefa", "")
+        prioridade = row.get("prioridade_tarefa", "")
+        horas = row.get("horas_gastas_tarefa", 0)
+
+        print(
+            f"  {id_t:>4} {titulo:<22} {projeto:<20} "
+            f"{usuario:<15} {status:<14} {prioridade:<8} {horas:>6.2f}"
+        )
+
+    _linha()
 
 
-def relatorio_tarefas_projeto_status(conexao):
-    """RF03.3 — Tarefas por projeto e por status (opcional)."""
+def relatorio_tarefas_projeto_status(banco):
+    """RF03.3 — Quantidade de tarefas por projeto e status."""
+
     print("\n" + "=" * 72)
     print("RELATÓRIO 3 — Tarefas por Projeto e Status")
     print("=" * 72)
-    cursor = conexao.cursor()
-    try:
-        cursor.execute(_SQL_TAREFAS_PROJETO_STATUS)
-        rows = cursor.fetchall()
-        if not rows:
-            print("  Nenhum registro encontrado.")
-            return
-        print(f"  {'PROJETO':<30} {'STATUS':<16} {'QTD':>6}")
-        _linha()
-        for row in rows:
-            projeto, status, qtd = row
-            print(f"  {projeto:<30} {status:<16} {qtd:>6}")
-        _linha()
-    finally:
-        cursor.close()
+
+    pipeline = [
+        {
+            "$group": {
+                "_id": {
+                    "id_projeto": "$id_projeto",
+                    "status": "$status_tarefa"
+                },
+                "quantidade": {"$sum": 1}
+            }
+        },
+        {
+            "$lookup": {
+                "from": "projetos",
+                "localField": "_id.id_projeto",
+                "foreignField": "_id",
+                "as": "projeto"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$projeto",
+                "preserveNullAndEmptyArrays": True
+            }
+        },
+        {
+            "$project": {
+                "_id": 0,
+                "nome_projeto": {
+                    "$ifNull": ["$projeto.nome_projeto", "Não informado"]
+                },
+                "status": "$_id.status",
+                "quantidade": 1
+            }
+        },
+        {"$sort": {"nome_projeto": 1, "status": 1}}
+    ]
+
+    rows = list(banco["tarefas"].aggregate(pipeline))
+
+    if not rows:
+        print("  Nenhum registro encontrado.")
+        return
+
+    print(f"  {'PROJETO':<30} {'STATUS':<16} {'QTD':>6}")
+    _linha()
+
+    for row in rows:
+        projeto = row.get("nome_projeto", "")
+        status = row.get("status", "")
+        quantidade = row.get("quantidade", 0)
+
+        print(f"  {projeto:<30} {status:<16} {quantidade:>6}")
+
+    _linha()
 
 
-def menu_relatorios(conexao):
+def menu_relatorios(banco):
     """Submenu de relatórios integrado ao menu principal."""
+
     while True:
         print("\n" + "=" * 44)
         print("         RELATÓRIOS")
         print("=" * 44)
-        print("  1 - Resumo por usuário (GROUP BY)")
-        print("  2 - Tarefas detalhadas (JOIN)")
+        print("  1 - Resumo por usuário (AGGREGATE)")
+        print("  2 - Tarefas detalhadas (LOOKUP)")
         print("  3 - Tarefas por projeto e status")
         print("  0 - Voltar ao menu principal")
         print("=" * 44)
+
         try:
             opcao = input("Escolha uma opção (0-3): ").strip()
         except (EOFError, KeyboardInterrupt):
             break
 
         if opcao == "1":
-            relatorio_resumo_usuario(conexao)
+            relatorio_resumo_usuario(banco)
         elif opcao == "2":
-            relatorio_tarefas_detalhadas(conexao)
+            relatorio_tarefas_detalhadas(banco)
         elif opcao == "3":
-            relatorio_tarefas_projeto_status(conexao)
+            relatorio_tarefas_projeto_status(banco)
         elif opcao == "0":
             break
         else:

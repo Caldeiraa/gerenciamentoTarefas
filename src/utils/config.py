@@ -7,11 +7,10 @@ SEMESTRE = "2026/2"
 
 # Preencher com os nomes completos de todos os integrantes do grupo.
 INTEGRANTES = [
-    "George",
-    "Murilo",
-    "Davi",
+    "George Pinheiro Ramos",
+    "Murilo Caldeira Sousa",
+    "Davi Mendes Barcelos",
 ]
-
 # Nomes das tabelas no banco de dados (usados na splash screen).
 TABELAS = ["usuarios", "projetos", "tarefas"]
 
