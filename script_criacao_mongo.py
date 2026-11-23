@@ -14,19 +14,19 @@ COLECOES = ["usuarios", "projetos", "tarefas"]
 SEED_USUARIOS = [
     {
         "_id": 1,
-        "nome_usuario": "Murilo",
+        "nome_usuario": "Murilo Caldeira Sousa",
         "email_usuario": "murilo@exemplo.com",
         "cargo_usuario": "Analista",
     },
     {
         "_id": 2,
-        "nome_usuario": "Davi",
+        "nome_usuario": "Davi Mendes Barcelos",
         "email_usuario": "davi@exemplo.com",
         "cargo_usuario": "Desenvolvedor",
     },
     {
         "_id": 3,
-        "nome_usuario": "George",
+        "nome_usuario": "George Pinheiro Ramos",
         "email_usuario": "george@exemplo.com",
         "cargo_usuario": "Desenvolvedor",
     },
