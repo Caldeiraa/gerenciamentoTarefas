@@ -1,8 +1,4 @@
-"""Módulo principal — ponto de entrada e integração de todos os módulos.
-
-Responsável pelo fluxo do programa: splash screen → menu principal → ações.
-Estrutura conforme RNF04: model, controller, conexion, sql, reports, utils, principal.
-"""
+"""Módulo principal do sistema."""
 
 from src.conexion.mongo_connection import conectar_mongo, desconectar_mongo
 from src.utils.config import OPCOES_MENU
@@ -11,14 +7,15 @@ from src.reports.reports import menu_relatorios
 from src.controller import controller
 
 
-#  MENUS DE INSERÇÃO 
+# Menus de Inserção
 
 def _menu_inserir_entidade(conexao):
-    """RF04 — Menu de entidades → escolha → inserção → repetir."""
+    """Menu para inserção de registros."""
     while True:
         print("\n" + "=" * 44)
         print("         INSERIR REGISTROS")
         print("=" * 44)
+
         print("  1 - Usuário")
         print("  2 - Projeto")
         print("  3 - Tarefa")
@@ -96,14 +93,15 @@ def _inserir_tarefa(conexao):
             break
 
 
-#  MENUS DE REMOÇÃO 
+# Menus de Remoção
 
 def _menu_remover_entidade(conexao):
-    """RF05 — Menu de entidades → listagem → seleção → confirmação → remoção."""
+    """Menu para remoção de registros."""
     while True:
         print("\n" + "=" * 44)
         print("         REMOVER REGISTROS")
         print("=" * 44)
+
         print("  1 - Usuário")
         print("  2 - Projeto")
         print("  3 - Tarefa")
@@ -219,14 +217,15 @@ def _remover_tarefa(conexao):
             break
 
 
-#  MENUS DE ATUALIZAÇÃO 
+# Menus de Atualização
 
 def _menu_atualizar_entidade(conexao):
-    """RF06 — Menu → listagem → seleção → novos valores → exibir atualizado."""
+    """Menu para atualização de registros."""
     while True:
         print("\n" + "=" * 44)
         print("         ATUALIZAR REGISTROS")
         print("=" * 44)
+
         print("  1 - Usuário")
         print("  2 - Projeto")
         print("  3 - Tarefa")
@@ -355,7 +354,7 @@ def _exibir_menu():
 
 
 def main():
-    """Fluxo completo: MongoDB → splash → menu → ações → desconexão."""
+    """Inicia a aplicação."""
 
     cliente, banco = conectar_mongo()
 
@@ -365,12 +364,13 @@ def main():
         return
 
     try:
-        # RF01 — Splash screen
+        # Tela inicial
         exibir_splash_screen(banco)
 
-        # RF02 — Menu principal exibido continuamente
+        # Menu principal
         while True:
             _exibir_menu()
+
 
             try:
                 opcao = input("Escolha uma opção (1-5): ").strip()

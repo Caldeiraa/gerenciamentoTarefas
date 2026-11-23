@@ -14,7 +14,7 @@ INTEGRANTES = [
 # Nomes das tabelas no banco de dados (usados na splash screen).
 TABELAS = ["usuarios", "projetos", "tarefas"]
 
-# Opções exibidas no menu principal (RF02).
+# Opções exibidas no menu principal
 OPCOES_MENU = {
     "1": "Relatórios",
     "2": "Inserir registros",

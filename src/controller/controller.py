@@ -1,9 +1,4 @@
-"""Controller — lógica de negócio, validações e operações CRUD no MongoDB (PyMongo).
-
-Cada método recebe o objeto database (db) retornado por conectar(), executa as
-validações das regras de negócio (RN01–RN08) e opera diretamente nas coleções
-'usuarios', 'projetos' e 'tarefas' via PyMongo.
-"""
+"""Controlador das operações no banco de dados MongoDB."""
 
 import re
 from datetime import date
@@ -16,14 +11,14 @@ _PRIORIDADES_VALIDAS = ("BAIXA", "MEDIA", "ALTA")
 
 
 def _validar_email(email):
-    """RN01 — formato básico de e-mail."""
+    """Valida o formato do e-mail."""
     padrao = r'^[\w\.\-]+@[\w\.\-]+\.\w+$'
     if not re.match(padrao, email):
         raise ValueError(f"E-mail '{email}' tem formato inválido.")
 
 
 def _proximo_id(collection):
-    """Gera o próximo _id inteiro sequencial para manter compatibilidade com o seed."""
+    """Gera o próximo ID sequencial."""
     ultimo = collection.find_one(sort=[("_id", -1)])
     if ultimo and isinstance(ultimo.get("_id"), int):
         return ultimo["_id"] + 1
@@ -31,7 +26,7 @@ def _proximo_id(collection):
 
 
 def _registro_existe(collection, id_valor):
-    """RN08 — verifica se um documento com o _id informado existe na coleção."""
+    """Verifica se um registro existe pelo ID."""
     try:
         id_int = int(id_valor)
     except (ValueError, TypeError):
@@ -40,7 +35,7 @@ def _registro_existe(collection, id_valor):
 
 
 def _validar_data_str(texto, nome_campo):
-    """Valida string no formato AAAA-MM-DD e retorna a string normalizada."""
+    """Valida string no formato AAAA-MM-DD."""
     try:
         valor = texto.strip()
         partes = valor.split("-")
@@ -91,7 +86,7 @@ def _doc_para_tarefa(doc):
 # ==============================================================================
 
 def inserir_usuario(conexao, nome, email, cargo):
-    """RF04 + RN01 + RN08 — insere novo usuário com insert_one."""
+    """Insere um novo usuário."""
     if not nome or not email:
         raise ValueError("Nome e e-mail são obrigatórios.")
     _validar_email(email)
@@ -115,14 +110,14 @@ def inserir_usuario(conexao, nome, email, cargo):
 
 
 def listar_usuarios(conexao):
-    """Retorna todos os usuários ordenados por _id."""
+    """Retorna todos os usuários ordenados por ID."""
     usuarios = conexao["usuarios"]
     cursor = usuarios.find().sort("_id", 1)
     return [_doc_para_usuario(doc) for doc in cursor]
 
 
 def buscar_usuario(conexao, id_usuario):
-    """Busca um usuário pelo _id."""
+    """Busca um usuário pelo ID."""
     try:
         id_int = int(id_usuario)
     except (ValueError, TypeError):
@@ -132,7 +127,7 @@ def buscar_usuario(conexao, id_usuario):
 
 
 def atualizar_usuario(conexao, id_usuario, nome, email, cargo):
-    """RF06 + RN01 + RN08 — atualiza campos atômicos via update_one sem alterar _id."""
+    """Atualiza os dados de um usuário."""
     try:
         id_int = int(id_usuario)
     except (ValueError, TypeError):
@@ -164,7 +159,7 @@ def atualizar_usuario(conexao, id_usuario, nome, email, cargo):
 
 
 def excluir_usuario(conexao, id_usuario, excluir_filhos=False):
-    """RF05 — verifica integridade referencial em tarefas antes de excluir usuário."""
+    """Exclui um usuário e verifica se possui tarefas vinculadas."""
     try:
         id_int = int(id_usuario)
     except (ValueError, TypeError):
@@ -197,7 +192,7 @@ def excluir_usuario(conexao, id_usuario, excluir_filhos=False):
 # ==============================================================================
 
 def inserir_projeto(conexao, nome, descricao, data_inicio_str, data_fim_str):
-    """RF04 + RN06 — insere novo projeto com insert_one."""
+    """Insere um novo projeto."""
     if not nome or not data_inicio_str:
         raise ValueError("Nome e data de início são obrigatórios.")
 
@@ -205,7 +200,7 @@ def inserir_projeto(conexao, nome, descricao, data_inicio_str, data_fim_str):
     data_fim = _validar_data_str(data_fim_str, "data de término") if data_fim_str else None
 
     if data_fim and data_fim < data_inicio:
-        raise ValueError("RN06: Data de término não pode ser anterior à data de início.")
+        raise ValueError("Data de término não pode ser anterior à data de início.")
 
     projetos = conexao["projetos"]
     try:
@@ -224,14 +219,14 @@ def inserir_projeto(conexao, nome, descricao, data_inicio_str, data_fim_str):
 
 
 def listar_projetos(conexao):
-    """Retorna todos os projetos ordenados por _id."""
+    """Retorna todos os projetos ordenados por ID."""
     projetos = conexao["projetos"]
     cursor = projetos.find().sort("_id", 1)
     return [_doc_para_projeto(doc) for doc in cursor]
 
 
 def buscar_projeto(conexao, id_projeto):
-    """Busca um projeto pelo _id."""
+    """Busca um projeto pelo ID."""
     try:
         id_int = int(id_projeto)
     except (ValueError, TypeError):
@@ -241,7 +236,7 @@ def buscar_projeto(conexao, id_projeto):
 
 
 def atualizar_projeto(conexao, id_projeto, nome, descricao, data_inicio_str, data_fim_str):
-    """RF06 + RN06 + RN08 — atualiza campos atômicos via update_one sem alterar _id."""
+    """Atualiza os dados de um projeto."""
     try:
         id_int = int(id_projeto)
     except (ValueError, TypeError):
@@ -264,7 +259,7 @@ def atualizar_projeto(conexao, id_projeto, nome, descricao, data_inicio_str, dat
     )
 
     if data_inicio and data_fim and data_fim < data_inicio:
-        raise ValueError("RN06: Data de término não pode ser anterior à data de início.")
+        raise ValueError("Data de término não pode ser anterior à data de início.")
 
     campos_atualizar = {
         "data_inicio_projeto": data_inicio,
@@ -283,7 +278,7 @@ def atualizar_projeto(conexao, id_projeto, nome, descricao, data_inicio_str, dat
 
 
 def excluir_projeto(conexao, id_projeto, excluir_filhos=False):
-    """RF05 — verifica integridade referencial em tarefas antes de excluir projeto."""
+    """Exclui um projeto e verifica se possui tarefas vinculadas."""
     try:
         id_int = int(id_projeto)
     except (ValueError, TypeError):
@@ -318,7 +313,7 @@ def excluir_projeto(conexao, id_projeto, excluir_filhos=False):
 def inserir_tarefa(conexao, titulo, descricao, status, prioridade,
                    horas_gastas, data_criacao_str, data_conclusao_str,
                    id_projeto, id_usuario):
-    """RF04 + RN02–RN07 — insere nova tarefa com insert_one após validar FKs."""
+    """Insere uma nova tarefa após validar os dados e referências."""
     if not titulo or not titulo.strip():
         raise ValueError("Título da tarefa é obrigatório.")
 
@@ -326,16 +321,16 @@ def inserir_tarefa(conexao, titulo, descricao, status, prioridade,
     prioridade_norm = prioridade.strip().upper() if prioridade else ""
 
     if status_norm not in _STATUS_VALIDOS:
-        raise ValueError(f"RN03: Status inválido. Use: {', '.join(_STATUS_VALIDOS)}.")
+        raise ValueError(f"Status inválido. Use: {', '.join(_STATUS_VALIDOS)}.")
     if prioridade_norm not in _PRIORIDADES_VALIDAS:
-        raise ValueError(f"RN04: Prioridade inválida. Use: {', '.join(_PRIORIDADES_VALIDAS)}.")
+        raise ValueError(f"Prioridade inválida. Use: {', '.join(_PRIORIDADES_VALIDAS)}.")
 
     try:
         horas = float(horas_gastas)
     except (ValueError, TypeError):
         raise ValueError("Horas gastas devem ser um número.")
     if horas < 0:
-        raise ValueError("RN05: Horas gastas não podem ser negativas.")
+        raise ValueError("Horas gastas não podem ser negativas.")
 
     data_criacao = _validar_data_str(data_criacao_str, "data de criação")
     data_conclusao = (
@@ -345,20 +340,20 @@ def inserir_tarefa(conexao, titulo, descricao, status, prioridade,
     )
 
     if data_conclusao and status_norm != "CONCLUIDA":
-        raise ValueError("RN07: Data de conclusão só pode ser preenchida quando status = CONCLUIDA.")
+        raise ValueError("Data de conclusão só pode ser preenchida quando status = CONCLUIDA.")
     if status_norm == "CONCLUIDA" and not data_conclusao:
-        raise ValueError("RN07: Tarefa CONCLUIDA deve ter data de conclusão.")
+        raise ValueError("Tarefa CONCLUIDA deve ter data de conclusão.")
 
     try:
         id_proj_int = int(id_projeto)
         id_user_int = int(id_usuario)
     except (ValueError, TypeError):
-        raise ValueError("RN02: IDs de projeto e usuário devem ser números inteiros.")
+        raise ValueError("IDs de projeto e usuário devem ser números inteiros.")
 
     if not _registro_existe(conexao["projetos"], id_proj_int):
-        raise ValueError(f"RN02: Projeto ID {id_proj_int} não existe.")
+        raise ValueError(f"Projeto ID {id_proj_int} não existe.")
     if not _registro_existe(conexao["usuarios"], id_user_int):
-        raise ValueError(f"RN02: Usuário ID {id_user_int} não existe.")
+        raise ValueError(f"Usuário ID {id_user_int} não existe.")
 
     tarefas = conexao["tarefas"]
     try:
@@ -382,14 +377,14 @@ def inserir_tarefa(conexao, titulo, descricao, status, prioridade,
 
 
 def listar_tarefas(conexao):
-    """Retorna todas as tarefas ordenadas por _id."""
+    """Retorna todas as tarefas ordenadas por ID."""
     tarefas = conexao["tarefas"]
     cursor = tarefas.find().sort("_id", 1)
     return [_doc_para_tarefa(doc) for doc in cursor]
 
 
 def buscar_tarefa(conexao, id_tarefa):
-    """Busca uma tarefa pelo _id."""
+    """Busca uma tarefa pelo ID."""
     try:
         id_int = int(id_tarefa)
     except (ValueError, TypeError):
@@ -401,7 +396,7 @@ def buscar_tarefa(conexao, id_tarefa):
 def atualizar_tarefa(conexao, id_tarefa, titulo, descricao, status, prioridade,
                      horas_gastas, data_criacao_str, data_conclusao_str,
                      id_projeto, id_usuario):
-    """RF06 + RN02–RN08 — atualiza campos atômicos via update_one sem alterar _id."""
+    """Atualiza os dados de uma tarefa."""
     try:
         id_int = int(id_tarefa)
     except (ValueError, TypeError):
@@ -416,16 +411,16 @@ def atualizar_tarefa(conexao, id_tarefa, titulo, descricao, status, prioridade,
     prioridade_norm = prioridade.strip().upper() if prioridade and prioridade.strip() else atual.get("prioridade_tarefa")
 
     if status_norm not in _STATUS_VALIDOS:
-        raise ValueError(f"RN03: Status inválido. Use: {', '.join(_STATUS_VALIDOS)}.")
+        raise ValueError(f"Status inválido. Use: {', '.join(_STATUS_VALIDOS)}.")
     if prioridade_norm not in _PRIORIDADES_VALIDAS:
-        raise ValueError(f"RN04: Prioridade inválida. Use: {', '.join(_PRIORIDADES_VALIDAS)}.")
+        raise ValueError(f"Prioridade inválida. Use: {', '.join(_PRIORIDADES_VALIDAS)}.")
 
     try:
         horas = float(horas_gastas) if horas_gastas is not None and str(horas_gastas).strip() != "" else float(atual.get("horas_gastas_tarefa", 0.0))
     except (ValueError, TypeError):
         raise ValueError("Horas gastas devem ser um número.")
     if horas < 0:
-        raise ValueError("RN05: Horas gastas não podem ser negativas.")
+        raise ValueError("Horas gastas não podem ser negativas.")
 
     data_criacao = (
         _validar_data_str(data_criacao_str, "data de criação")
@@ -439,20 +434,20 @@ def atualizar_tarefa(conexao, id_tarefa, titulo, descricao, status, prioridade,
     )
 
     if data_conclusao and status_norm != "CONCLUIDA":
-        raise ValueError("RN07: Data de conclusão só permitida para status CONCLUIDA.")
+        raise ValueError("Data de conclusão só permitida para status CONCLUIDA.")
     if status_norm == "CONCLUIDA" and not data_conclusao:
-        raise ValueError("RN07: Tarefa CONCLUIDA deve ter data de conclusão.")
+        raise ValueError("Tarefa CONCLUIDA deve ter data de conclusão.")
 
     try:
         id_proj_int = int(id_projeto) if id_projeto is not None and str(id_projeto).strip() != "" else atual.get("id_projeto")
         id_user_int = int(id_usuario) if id_usuario is not None and str(id_usuario).strip() != "" else atual.get("id_usuario")
     except (ValueError, TypeError):
-        raise ValueError("RN02: IDs de projeto e usuário devem ser números inteiros.")
+        raise ValueError("IDs de projeto e usuário devem ser números inteiros.")
 
     if not _registro_existe(conexao["projetos"], id_proj_int):
-        raise ValueError(f"RN02: Projeto ID {id_proj_int} não existe.")
+        raise ValueError(f"Projeto ID {id_proj_int} não existe.")
     if not _registro_existe(conexao["usuarios"], id_user_int):
-        raise ValueError(f"RN02: Usuário ID {id_user_int} não existe.")
+        raise ValueError(f"Usuário ID {id_user_int} não existe.")
 
     campos_atualizar = {
         "status_tarefa": status_norm,
@@ -476,7 +471,7 @@ def atualizar_tarefa(conexao, id_tarefa, titulo, descricao, status, prioridade,
 
 
 def excluir_tarefa(conexao, id_tarefa):
-    """RF05 — exclui uma tarefa pelo _id via delete_one."""
+    """Exclui uma tarefa pelo ID."""
     try:
         id_int = int(id_tarefa)
     except (ValueError, TypeError):

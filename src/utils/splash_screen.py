@@ -1,9 +1,5 @@
 
-"""Splash screen — tela inicial do sistema (RF01).
-
-Exibe: nome do sistema, contagem de documentos, integrantes,
-disciplina, semestre e professor.
-"""
+"""Tela inicial do sistema."""
 
 from src.utils.config import (
     NOME_SISTEMA,
@@ -16,7 +12,7 @@ from src.utils.config import (
 
 
 def _contar_registros(banco):
-    """Consulta a quantidade de documentos em cada coleção MongoDB."""
+    """Consulta a quantidade de documentos em cada coleção."""
     resultado = {}
 
     for colecao in TABELAS:
@@ -26,8 +22,9 @@ def _contar_registros(banco):
 
 
 def exibir_splash_screen(banco=None):
-    """RF01 — Tela inicial com contagem de documentos."""
+    """Exibe a tela inicial com a contagem de registros."""
     largura = 62
+
 
     print("\n" + "=" * largura)
     print(NOME_SISTEMA.center(largura))

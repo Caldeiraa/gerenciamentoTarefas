@@ -1,10 +1,5 @@
-"""Módulo SQL — consultas montadas por concatenação de texto (sem ORM).
+"""Módulo de consultas SQL."""
 
-Cada função retorna uma tupla (sql_string, parametros) pronta para
-cursor.execute(sql, parametros).
-O edital exige SQL por concatenação; os parâmetros são passados via
-placeholders %s do mysql-connector para evitar SQL Injection.
-"""
 
 #  USUÁRIOS
 

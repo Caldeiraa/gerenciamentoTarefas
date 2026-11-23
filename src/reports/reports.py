@@ -1,10 +1,5 @@
 
-"""Módulo de relatórios (RF03).
-
-RF03.1 — Resumo por usuário (AGGREGATE)
-RF03.2 — Tarefas com nome do projeto e responsável (LOOKUP)
-RF03.3 — Tarefas por projeto e por status (AGGREGATE)
-"""
+"""Módulo de relatórios do sistema."""
 
 
 def _linha(largura=72):
@@ -12,11 +7,12 @@ def _linha(largura=72):
 
 
 def relatorio_resumo_usuario(banco):
-    """RF03.1 — Total de tarefas, concluídas e horas por usuário."""
+    """Total de tarefas, concluídas e horas por usuário."""
 
     print("\n" + "=" * 72)
     print("RELATÓRIO 1 — Resumo por Usuário (AGGREGATE)")
     print("=" * 72)
+
 
     pipeline = [
         {
@@ -75,11 +71,12 @@ def relatorio_resumo_usuario(banco):
 
 
 def relatorio_tarefas_detalhadas(banco):
-    """RF03.2 — Tarefas com nome do projeto e responsável."""
+    """Tarefas com nome do projeto e responsável."""
 
     print("\n" + "=" * 72)
     print("RELATÓRIO 2 — Tarefas Detalhadas (LOOKUP)")
     print("=" * 72)
+
 
     pipeline = [
         {
@@ -143,11 +140,12 @@ def relatorio_tarefas_detalhadas(banco):
 
 
 def relatorio_tarefas_projeto_status(banco):
-    """RF03.3 — Quantidade de tarefas por projeto e status."""
+    """Quantidade de tarefas por projeto e status."""
 
     print("\n" + "=" * 72)
     print("RELATÓRIO 3 — Tarefas por Projeto e Status")
     print("=" * 72)
+
 
     pipeline = [
         {
