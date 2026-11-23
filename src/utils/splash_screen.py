@@ -1,48 +1,54 @@
+
 """Splash screen — tela inicial do sistema (RF01).
 
-Exibe: nome do sistema, contagem de registros, integrantes, disciplina,
-semestre e professor.
+Exibe: nome do sistema, contagem de documentos, integrantes,
+disciplina, semestre e professor.
 """
 
 from src.utils.config import (
-    NOME_SISTEMA, DISCIPLINA, PROFESSOR, SEMESTRE, INTEGRANTES, TABELAS
+    NOME_SISTEMA,
+    DISCIPLINA,
+    PROFESSOR,
+    SEMESTRE,
+    INTEGRANTES,
+    TABELAS
 )
-from src.sql.queries import sql_contar_tabela
 
 
-def _contar_registros(conexao):
-    """Consulta a quantidade de registros em cada tabela."""
+def _contar_registros(banco):
+    """Consulta a quantidade de documentos em cada coleção MongoDB."""
     resultado = {}
-    cursor = conexao.cursor()
-    try:
-        for tabela in TABELAS:
-            sql, params = sql_contar_tabela(tabela)
-            cursor.execute(sql, params)
-            resultado[tabela] = cursor.fetchone()[0]
-    finally:
-        cursor.close()
+
+    for colecao in TABELAS:
+        resultado[colecao] = banco[colecao].count_documents({})
+
     return resultado
 
 
-def exibir_splash_screen(conexao=None):
-    """RF01 — Tela inicial com contagem de registros."""
+def exibir_splash_screen(banco=None):
+    """RF01 — Tela inicial com contagem de documentos."""
     largura = 62
+
     print("\n" + "=" * largura)
     print(NOME_SISTEMA.center(largura))
     print("=" * largura)
 
     print("\nTOTAL DE REGISTROS EXISTENTES:")
-    if conexao is None:
+
+    if banco is None:
         print("  Banco de dados não conectado; contagem indisponível.")
     else:
         try:
-            contagens = _contar_registros(conexao)
-            for tabela, total in contagens.items():
-                print(f"  {tabela.upper():<22}: {total}")
+            contagens = _contar_registros(banco)
+
+            for colecao, total in contagens.items():
+                print(f"  {colecao.upper():<22}: {total}")
+
         except Exception as erro:
             print(f"  Não foi possível consultar os registros: {erro}")
 
     print("\nDESENVOLVIDO POR:")
+
     for integrante in INTEGRANTES:
         print(f"  - {integrante}")
 
@@ -50,4 +56,5 @@ def exibir_splash_screen(conexao=None):
     print(f"SEMESTRE   : {SEMESTRE}")
     print(f"PROFESSOR  : {PROFESSOR}")
     print("=" * largura)
+
     input("\nPressione Enter para continuar...")
