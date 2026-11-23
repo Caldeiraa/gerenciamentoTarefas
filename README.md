@@ -186,7 +186,7 @@ O arquivo `modelo_relacional.md` apresenta a modelagem e os relacionamentos entr
 
 O vídeo demonstrativo do projeto está disponível no YouTube:
 
-https://youtu.be/wwb_LKxzltk
+https://www.youtube.com/watch?v=wwb_LKxzItk
 
 **Observação:** a demonstração em vídeo deverá corresponder à versão atual do sistema, que utiliza MongoDB.
 
